@@ -117,48 +117,50 @@ function ViewByDepartment(){
                                 var update_stock_quantity = (result[x].stock_quantity - Number(data.product_quantity));
                                 var q = connection.query('UPDATE products SET stock_quantity=? WHERE product_name=?', [update_stock_quantity, data.item_name], function(){
                                     console.log('Data is successfully updated!');
-                                    // connection.end();
+                                    
+                        // connection.end();
+
+                        inquirer.prompt([
+                            {
+                                type: 'confirm',
+                                message: 'Ready to checkout?',
+                                name: 'confirm',
+                                default: false
+                            }
+                        ]).then(function(data){
+                            if(data.confirm == false){
+                                ViewByDepartment();
+                            }else{
+                                //printing receipt
+                                var product = 0;
+                                    console.log('Thank you for Shopping! \n Here is your receipt! \n');
+                                    console.log('-------------------------------------------')
+                                    for(var i in shoppingCart){
+                                        console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
+                                        "\nQuantity: " + itemQuantity[i] + "\n");
+                    
+                                        product += (shoppingCart[i].price * itemQuantity[i]);
+                                    }
+                                    // product
+                                console.log("Total: " + product)
+                                connection.end();
+                            }
+                        });
+
                                 })
                                 console.log(q.sql)
                                 console.log("SQ: " + result[x].stock_quantity + "\nGet: " + Number(data.product_quantity) + "\nLeft: " + (result[x].stock_quantity - data.product_quantity))
                                 shoppingCart.push(result[x]);
-                                itemQuantity.push(data.product_quantity)
-
-                                // ConfirmCheckout();
-                                inquirer.prompt([
-                                    {
-                                        type: 'confirm',
-                                        message: 'Ready to checkout?',
-                                        name: 'confirm',
-                                        default: false
-                                    }
-                                ]).then(function(data){
-                                    if(data.confirm == false){
-                                        ViewByDepartment();
-                                    }else{
-                                        //printing receipt
-                                        var product = 0;
-                                            console.log('Thank you for Shopping! \n Here is your receipt! \n');
-                                            console.log('-------------------------------------------')
-                                            for(var i in shoppingCart){
-                                                console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
-                                                "\nQuantity: " + itemQuantity[i] + "\n");
-                            
-                                                product += (shoppingCart[i].price * itemQuantity[i]);
-                                            }
-                                            // product
-                                        console.log("Total: " + product)
-                                        connection.end();
-                                    }
-                                });
-                                
+                                itemQuantity.push(data.product_quantity);
                             }else{
                                 console.log('Insufficient quantity!');
                             }
                         }
                         
+                        // connection.end();
                     });
                     console.log(q.sql)
+                    // ConfirmCheckout();
                     
                 })
             })
@@ -168,70 +170,70 @@ function ViewByDepartment(){
     
 
 //prompting two messages
-// function Order(){
-//     inquirer.prompt([
-//         {
-//             type: 'input',
-//             message: chalk.green('Please choose your item.'),
-//             name: 'product_id'
-//         },
-//         {
-//             type: 'input',
-//             message: chalk.green('How many products would you like to take?'),
-//             name: 'product_quantity'
-//         }
-//     ]).then(function(result){
-//         connection.query('SELECT * FROM products WHERE item_id=?', [Number(result.product_id)], function(error, data){
+function Order(){
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: chalk.green('Please choose your item.'),
+            name: 'product_id'
+        },
+        {
+            type: 'input',
+            message: chalk.green('How many products would you like to take?'),
+            name: 'product_quantity'
+        }
+    ]).then(function(result){
+        connection.query('SELECT * FROM products WHERE item_id=?', [Number(result.product_id)], function(error, data){
             
-//             for(var x in data){
-//                 if(data[x].stock_quantity > 0){
-//                     console.log('there are still more stock');
-//                     var update_stock_quantity = (data[x].stock_quantity - result.product_quantity);
-//                     var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
-//                         console.log('Data is successfully updated!');
-//                         // connection.end();
-//                     })
-//                     console.log(q.sql)
-//                     console.log("SQ: " + data[x].stock_quantity + "\nGet: " + result.product_quantity + "\nLeft: " + (data[x].stock_quantity - result.product_quantity))
-//                     shoppingCart.push(data[x]);
-//                     itemQuantity.push(result.product_quantity)
+            for(var x in data){
+                if(data[x].stock_quantity > 0){
+                    console.log('there are still more stock');
+                    var update_stock_quantity = (data[x].stock_quantity - result.product_quantity);
+                    var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
+                        console.log('Data is successfully updated!');
+                        // connection.end();
+                    })
+                    console.log(q.sql)
+                    console.log("SQ: " + data[x].stock_quantity + "\nGet: " + result.product_quantity + "\nLeft: " + (data[x].stock_quantity - result.product_quantity))
+                    shoppingCart.push(data[x]);
+                    itemQuantity.push(result.product_quantity)
                     
-//                 }else{
-//                     console.log('Insufficient quantity!');
-//                 }
-//             }
-//             ConfirmCheckout();
-//             })
-//         });
+                }else{
+                    console.log('Insufficient quantity!');
+                }
+            }
+            ConfirmCheckout();
+            })
+        });
     
     
-// }
+}
 
-// function ConfirmCheckout(){
-//     inquirer.prompt([
-//         {
-//             type: 'confirm',
-//             message: 'Ready to checkout?',
-//             name: 'confirm',
-//             default: false
-//         }
-//     ]).then(function(data){
-//         if(data.confirm == false){
-//             Order();
-//         }else{
-//             //printing receipt
-//             var product = 0;
-//                 console.log('Thank you for Shopping! \n Here is your receipt! \n');
-//                 console.log('-------------------------------------------')
-//                 for(var i in shoppingCart){
-//                     console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
-//                     "\nQuantity: " + itemQuantity[i] + "\n");
+function ConfirmCheckout(){
+    inquirer.prompt([
+        {
+            type: 'confirm',
+            message: 'Ready to checkout?',
+            name: 'confirm',
+            default: false
+        }
+    ]).then(function(data){
+        if(data.confirm == false){
+            Order();
+        }else{
+            //printing receipt
+            var product = 0;
+                console.log('Thank you for Shopping! \n Here is your receipt! \n');
+                console.log('-------------------------------------------')
+                for(var i in shoppingCart){
+                    console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
+                    "\nQuantity: " + itemQuantity[i] + "\n");
 
-//                     product += (shoppingCart[i].price * itemQuantity[i]);
-//                 }
-//                 // product
-//             console.log("Total: " + product)
-//             connection.end();
-//         }
-//     });
-// }
+                    product += (shoppingCart[i].price * itemQuantity[i]);
+                }
+                // product
+            console.log("Total: " + product)
+            connection.end();
+        }
+    });
+}
