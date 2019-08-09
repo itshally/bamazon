@@ -60,7 +60,52 @@ function ViewAll(){
             );
         }
         console.log(table.toString());
-        Order();
+        // Order();
+
+        var items = [];
+        for(var i in data){
+            items.push(data[i].product_name)
+        }
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: chalk.green('Please choose your item.'),
+                choices: items,
+                name: 'product_name'
+            },
+            {
+                type: 'input',
+                message: chalk.green('How many products would you like to take?'),
+                name: 'product_quantity'
+            }
+        ]).then(function(result){
+            var q = connection.query('SELECT * FROM products WHERE product_name=?', [result.product_name], function(error, data){
+                
+                for(var x in data){
+                    if(data[x].stock_quantity > 0){
+                        console.log('there are still more stock');
+                        var update_stock_quantity = (data[x].stock_quantity - result.product_quantity);
+                        var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
+                            console.log('Data is successfully updated!');
+                            // connection.end();
+                        ConfirmCheckout();
+    
+                        })
+                        console.log(q.sql)
+                        console.log("SQ: " + data[x].stock_quantity + "\nGet: " + result.product_quantity + "\nLeft: " + (data[x].stock_quantity - result.product_quantity))
+                        shoppingCart.push(data[x]);
+                        itemQuantity.push(result.product_quantity)
+                    }else{
+                        console.log('Insufficient quantity!');
+                    }
+                }
+                })
+
+                console.log(q.sql)
+            });
+        
+
+
     });  
 } 
 
@@ -169,41 +214,6 @@ function ViewByDepartment(){
 
 //prompting two messages
 function Order(){
-    inquirer.prompt([
-        {
-            type: 'input',
-            message: chalk.green('Please choose your item.'),
-            name: 'product_id'
-        },
-        {
-            type: 'input',
-            message: chalk.green('How many products would you like to take?'),
-            name: 'product_quantity'
-        }
-    ]).then(function(result){
-        connection.query('SELECT * FROM products WHERE item_id=?', [Number(result.product_id)], function(error, data){
-            
-            for(var x in data){
-                if(data[x].stock_quantity > 0){
-                    console.log('there are still more stock');
-                    var update_stock_quantity = (data[x].stock_quantity - result.product_quantity);
-                    var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
-                        console.log('Data is successfully updated!');
-                        // connection.end();
-                    ConfirmCheckout();
-
-                    })
-                    console.log(q.sql)
-                    console.log("SQ: " + data[x].stock_quantity + "\nGet: " + result.product_quantity + "\nLeft: " + (data[x].stock_quantity - result.product_quantity))
-                    shoppingCart.push(data[x]);
-                    itemQuantity.push(result.product_quantity)
-                }else{
-                    console.log('Insufficient quantity!');
-                }
-            }
-            // ConfirmCheckout();
-            })
-        });
     
     
 }
@@ -218,7 +228,7 @@ function ConfirmCheckout(){
         }
     ]).then(function(data){
         if(data.confirm == false){
-            Order();
+            ViewAll();
         }else{
             //printing receipt
             var product = 0;
