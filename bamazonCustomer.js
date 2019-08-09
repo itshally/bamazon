@@ -157,10 +157,8 @@ function ViewByDepartment(){
                             }
                         }
                         
-                        // connection.end();
                     });
                     console.log(q.sql)
-                    // ConfirmCheckout();
                     
                 })
             })
@@ -192,17 +190,18 @@ function Order(){
                     var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
                         console.log('Data is successfully updated!');
                         // connection.end();
+                    ConfirmCheckout();
+
                     })
                     console.log(q.sql)
                     console.log("SQ: " + data[x].stock_quantity + "\nGet: " + result.product_quantity + "\nLeft: " + (data[x].stock_quantity - result.product_quantity))
                     shoppingCart.push(data[x]);
                     itemQuantity.push(result.product_quantity)
-                    
                 }else{
                     console.log('Insufficient quantity!');
                 }
             }
-            ConfirmCheckout();
+            // ConfirmCheckout();
             })
         });
     
