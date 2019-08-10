@@ -91,31 +91,58 @@ function ViewLowInventory(){
 
 
 function AddToInventory(){
-    console.log(lowInventory)
-    inquirer.prompt([
-        {
-            type: 'list',
-            message: 'Which item would you like to add more?',
-            choices: lowInventory,
-            name: 'add_more'
-
+    connection.query('SELECT * FROM products', function(e, data){
+        var lowInventory = [];
+        for(var x in data){
+            lowInventory.push(data[x].product_name);
         }
-    ]).then(function(data){
-        //This view the products at first
-        connection.query('UPDATE products SET ? WHERE item_id=?', function(error,data){
-            console.log("\nWELCOME TO BAMAZON! HERE ARE THE PRODUCTS THAT ARE AVAILABLE FOR YOU\n");
-            var divider = "\n-------------------------------------------\n";
-            for(var x in data){
-                var view_products = divider + "\n\tProduct ID: " + data[x].item_id + 
-                                    "\n\tDepartment: "+ data[x].department_name +
-                                    "\n\tProduct: "+ data[x].product_name +
-                                    "\n\tPrice: $"+ data[x].price +
-                                    "\n\tStocks Left: "+data[x].stock_quantity;
-                console.log(view_products);
-                
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Which item would you like to add more?',
+                choices: lowInventory,
+                name: 'item_name'
+            }, 
+            {
+                type: 'input',
+                message: 'Please type how much you want to add for this item.',
+                name: 'quantity'
             }
-            console.log(divider)
-            ManagerFunctions();
-        }); 
-    })  
+        ]).then(function(result){
+            //This view the products at first
+            // var total_quantity = Number(result.quantity);
+            console.log(Number(result.quantity))
+            connection.query('SELECT stock_quantity FROM products WHERE product_name=?', [result.item_name], function(e, data){
+                
+                for(var x in data){
+                    console.log(data[x].stock_quantity)
+                    var total_quantity = (data[x].stock_quantity + Number(result.quantity));
+                    
+                }
+                console.log(Number(total_quantity))
+                // console.log(total_quantity)
+                var q = connection.query('UPDATE products SET stock_quantity=? WHERE product_name=?', [total_quantity, result.item_name], function(){
+                    // console.log("\nWELCOME TO BAMAZON! HERE ARE THE PRODUCTS THAT ARE AVAILABLE FOR YOU\n");
+                    // var divider = "\n-------------------------------------------\n";
+                    // for(var x in data){
+                    //     var view_products = divider + "\n\tProduct ID: " + data[x].item_id + 
+                    //                         "\n\tDepartment: "+ data[x].department_name +
+                    //                         "\n\tProduct: "+ data[x].product_name +
+                    //                         "\n\tPrice: $"+ data[x].price +
+                    //                         "\n\tStocks Left: "+data[x].stock_quantity;
+                    //     console.log(view_products);
+                        
+                    // }
+                    // connection.end();
+                }); 
+                console.log(q.sql)
+                
+                    ManagerFunctions();
+            
+                
+            })
+            
+        })  
+    })
+    
 }
