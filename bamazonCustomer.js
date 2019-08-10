@@ -63,9 +63,9 @@ function ViewAll(){
         //as for this section, installing the npm 'cli-table' package is required
         var table = new Table({
             //state the table headers
-            head: ['Product ID', 'Department', 'Product Name', 'Price', 'Stocks Left'],  
+            head: ['Product ID', 'Department', 'Product Name', 'Price'],  
             //giving each column a width size
-            colWidths: [15, 25, 70, 15, 15]
+            colWidths: [15, 25, 70, 15]
         });
 
         //calling the second parameter, 'data', from the function inside the query in line 57
@@ -73,8 +73,8 @@ function ViewAll(){
 
             //pushing data to the table row that was created in line 61
             table.push(
-                //in each row, there will be the id, department, product name, price, and stock quantity
-                [data[x].item_id, data[x].department_name, data[x].product_name, data[x].price, data[x].stock_quantity]
+                //in each row, there will be the id, department, product name, price
+                [data[x].item_id, data[x].department_name, data[x].product_name, data[x].price]
             );
         }
 
@@ -91,11 +91,6 @@ function ViewAll(){
             //pushing the product name to the array in line 82
             items.push(data[i].product_name);
         }
-        
-        //pushing a value to the department,
-        //this value is an additional option for the user to return to the main menu
-        //BUT this will not reset the shoppingCart
-        items.push('Return to Main Menu');
 
         //a prompt will appear after the user chooses the 'View All' in line 32
         inquirer.prompt([
@@ -210,14 +205,14 @@ function ViewByDepartment(){
 
                     //all items of the chosen department will then be viewed in a table
                     var table = new Table({
-                        head: ['Product ID', 'Product Name', 'Price', 'Stocks Left'],
-                        colWidths: [15, 70, 15, 15]
+                        head: ['Product ID', 'Product Name', 'Price'],
+                        colWidths: [15, 70, 15]
                     });
 
 
                     for(var x in data){
                         table.push(
-                            [data[x].item_id, data[x].product_name, data[x].price, data[x].stock_quantity]
+                            [data[x].item_id, data[x].product_name, data[x].price]
                         );
                     }
 
