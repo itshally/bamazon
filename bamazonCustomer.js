@@ -84,8 +84,8 @@ function ViewAll(){
                 for(var x in data){
                     if(data[x].stock_quantity > 0){
                         console.log('there are still more stock');
-                        var update_stock_quantity = (data[x].stock_quantity - result.product_quantity);
-                        var q = connection.query('UPDATE products SET stock_quantity=? WHERE item_id=?', [Number(update_stock_quantity), Number(result.product_id)], function(){
+                        var update_stock_quantity = (data[x].stock_quantity - Number(result.product_quantity));
+                        var q = connection.query('UPDATE products SET stock_quantity=? WHERE product_name=?', [Number(update_stock_quantity), result.product_name], function(){
                             console.log('Data is successfully updated!');
                             // connection.end();
                         ConfirmCheckout();
