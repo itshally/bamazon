@@ -79,5 +79,74 @@ In your git bash console, type `node bamazonCustomer` to run the app for the cus
 
 
 ---
+### Manager View
+
+
+In your git bash console, type `node bamazonManager` to run the manager's POV.
+
+
+- Once the app starts running, this is what the first view for the manager.
+
+
+![img1](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-1.PNG)
+
+
+- If the user chooses the **View Products For Sale**
+
+
+![img2](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-2.PNG)
+
+
+- If the user chooses the **View Low Inventory**
+
+
+![img3](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-3.PNG)
+
+
+- If the user chooses the **Add To Inventory**, a list of items will appear.
+
+
+![img4](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-4.PNG)
+
+
+  - Once the user chooses a specific item, the app will then prompt a question of 
+  how much stock does the user want to add.
+  
+  
+   ![img5](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-5.PNG)
+  
+  
+  - Afterwards, the app will send a log stating that the item's stock quantity is updated.
+  
+  
+  - It will show the previous amount and the current amount of stock.
+  
+  
+   ![img6](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-6.PNG)
+  
+  
+  - Here is a preview of the updated item that we used for this example
+  
+  
+   ![img7](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-7.PNG)
+  
+
+- If the user chooses the **Add New Product**, the app will start prompting questions to get the information needed 
+about the new product that will soon be added in the database.
+
+
+- Once the user is done sending information, the app will notify the user that the new product has been added to the database.
+
+
+![img8](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-8.PNG)
+
+
+- Here is a preview of what we just added from the example:
+
+
+![img9](https://github.com/itshally/bamazon/blob/master/screenshots/manager/img-9.PNG)
+
+
+---
 
 ### Author: Hally
