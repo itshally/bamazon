@@ -1,27 +1,28 @@
+//installed required packages to run this application
 require('dotenv').config();
 var mysql = require('mysql'),
     inquirer = require('inquirer'),
     Table = require('cli-table'),
     chalk = require('chalk');
 
+//creating mysql connection
 var connection = mysql.createConnection({
     host: 'localhost',
-    user : 'user',
+    user : 'user', //your mysql username 
     port : '3306',
-    password : process.env.MYSQL_USER_PASSWORD,
-    database : 'bamazon'
+    password : process.env.MYSQL_USER_PASSWORD, //your mysql password
+    database : 'bamazon' //database name
 });
 
-var shoppingCart = [],
-itemQuantity = [];
+//declared variable names that will be holding an array of values later for this application
+var shoppingCart = [], //will be using to collect the items 
+    itemQuantity = []; //will be using to hold the values of each item's quantity
 
 
-
-
-console.log(chalk.magenta("_ _ _ ____ _    ____ ____ _  _ ____    ___ ____    ___  ____ _  _ ____ ___  ____ _  _ "));
-console.log(chalk.magenta("| | | |___ |    |    |  | |\\/| |___     |  |  |    |__] |__| |\\/| |__|   /  |  | |\\ | "));
-console.log(chalk.magenta("|_|_| |___ |___ |___ |__| |  | |___     |  |__|    |__] |  | |  | |  |  /__ |__| | \\| "));
-console.log(chalk.magenta("                                                                                      "));
+console.log(chalk.magenta("\t_ _ _ ____ _    ____ ____ _  _ ____    ___ ____    ___  ____ _  _ ____ ___  ____ _  _ "));
+console.log(chalk.magenta("\t| | | |___ |    |    |  | |\\/| |___     |  |  |    |__] |__| |\\/| |__|   /  |  | |\\ | "));
+console.log(chalk.magenta("\t|_|_| |___ |___ |___ |__| |  | |___     |  |__|    |__] |  | |  | |  |  /__ |__| | \\| "));
+console.log(chalk.magenta("\t                                                                                      "));
     
 inquirer.prompt([
     {
@@ -178,16 +179,34 @@ function ViewByDepartment(){
                             }else{
                                 //printing receipt
                                 var product = 0;
-                                    console.log('Thank you for Shopping! \n Here is your receipt! \n');
-                                    console.log('-------------------------------------------')
+                                    console.log(chalk.magenta("\t___ _  _ ____ _  _ _  _    _   _ ____ _  _    ____ ____ ____    ____ _  _ ____ ___  ___  _ _  _ ____ "));
+                                    console.log(chalk.magenta("\t |  |__| |__| |\\ | |_/      \\_/  |  | |  |    |___ |  | |__/    [__  |__| |  | |__] |__] | |\\ | | __ "));
+                                    console.log(chalk.magenta("\t |  |  | |  | | \\| | \\_      |   |__| |__|    |    |__| |  \\    ___] |  | |__| |    |    | | \\| |__] "));
+                                    console.log(chalk.magenta("\t                                                                                                     \n"));
+                    
+                                    console.log('Here is your purchase history:\n\n')
                                     for(var i in shoppingCart){
-                                        console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
-                                        "\nQuantity: " + itemQuantity[i] + "\n");
+                                        var table = new Table();
+                    
+                                        table.push(
+                                            { 'Item Name': shoppingCart[i].product_name },
+                                            { 'Price': shoppingCart[i].price },
+                                            {'Quantity': itemQuantity[i]}
+                                        );
+                                        
+                                        console.log(table.toString());
                     
                                         product += (shoppingCart[i].price * itemQuantity[i]);
                                     }
                                     // product
-                                console.log("Total: " + product)
+                                // console.log("Total: " + product)
+                                var table = new Table();
+ 
+                                table.push(
+                                    { 'Total': product.toFixed(2) }
+                                );
+                                
+                                console.log(table.toString());
                                 connection.end();
                             }
                         });
@@ -232,16 +251,38 @@ function ConfirmCheckout(){
         }else{
             //printing receipt
             var product = 0;
-                console.log('Thank you for Shopping! \n Here is your receipt! \n');
-                console.log('-------------------------------------------')
+                // console.log('Thank you for Shopping! \n Here is your receipt! \n');
+                console.log(chalk.magenta("\t___ _  _ ____ _  _ _  _    _   _ ____ _  _    ____ ____ ____    ____ _  _ ____ ___  ___  _ _  _ ____ "));
+                console.log(chalk.magenta("\t |  |__| |__| |\\ | |_/      \\_/  |  | |  |    |___ |  | |__/    [__  |__| |  | |__] |__] | |\\ | | __ "));
+                console.log(chalk.magenta("\t |  |  | |  | | \\| | \\_      |   |__| |__|    |    |__| |  \\    ___] |  | |__| |    |    | | \\| |__] "));
+                console.log(chalk.magenta("\t                                                                                                     \n"));
+
+                console.log('Here is your purchase history:\n\n');
                 for(var i in shoppingCart){
-                    console.log("Item: " + shoppingCart[i].product_name + "\nPrice: " + shoppingCart[i].price +
-                    "\nQuantity: " + itemQuantity[i] + "\n");
+
+                    var table = new Table();
+ 
+                    table.push(
+                        { 'Item Name': shoppingCart[i].product_name },
+                        { 'Price': shoppingCart[i].price },
+                        {'Quantity': itemQuantity[i]}
+                    );
+                    
+                    console.log(table.toString());
+
+                    // console.log();
 
                     product += (shoppingCart[i].price * itemQuantity[i]);
                 }
                 // product
-            console.log("Total: " + product)
+                var table = new Table();
+ 
+                    table.push(
+                        { 'Total': product.toFixed(2) }
+                    );
+                    
+                    console.log(table.toString());
+            // console.log("Total: " + product.toFixed(2))
             connection.end();
         }
     });
