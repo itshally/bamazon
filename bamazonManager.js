@@ -122,18 +122,7 @@ function AddToInventory(){
                 console.log(Number(total_quantity))
                 // console.log(total_quantity)
                 var q = connection.query('UPDATE products SET stock_quantity=? WHERE product_name=?', [total_quantity, result.item_name], function(){
-                    // console.log("\nWELCOME TO BAMAZON! HERE ARE THE PRODUCTS THAT ARE AVAILABLE FOR YOU\n");
-                    // var divider = "\n-------------------------------------------\n";
-                    // for(var x in data){
-                    //     var view_products = divider + "\n\tProduct ID: " + data[x].item_id + 
-                    //                         "\n\tDepartment: "+ data[x].department_name +
-                    //                         "\n\tProduct: "+ data[x].product_name +
-                    //                         "\n\tPrice: $"+ data[x].price +
-                    //                         "\n\tStocks Left: "+data[x].stock_quantity;
-                    //     console.log(view_products);
-                        
-                    // }
-                    // connection.end();
+                    console.log('You have successfully updated the stock quantity.')
                 }); 
                 console.log(q.sql)
                 
@@ -145,4 +134,35 @@ function AddToInventory(){
         })  
     })
     
+}
+
+function AddNewProduct(){
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the product\'s name?',
+            name: 'product_name'
+        },
+        {
+            type: 'input',
+            message: 'In which department?',
+            name: 'product_department'
+        },
+        {
+            type: 'input',
+            message: 'For what price do you want to sell it?',
+            name: 'product_price'
+        },
+        {
+            type: 'input',
+            message: 'How many stocks are available right now?',
+            name: 'product_quantity'
+        }
+    ]).then(function(data){
+        connection.query('INSERT INTO products SET ?', {product_name:data.product_name, 
+            department_name: data.product_department, price: data.product_price, stock_quantity: data.product_quantity}, function(error, result){
+            console.log('new product has been added');
+        });
+        ManagerFunctions();
+    })
 }
