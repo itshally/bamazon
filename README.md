@@ -142,7 +142,6 @@ bamazon
   - mysql
   - table
   - Nodejs
-  - 
 - MySQL & MySQL Workbench
 
 ## Install
